@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks/hooks';
+import { addInfo } from '../../store/slice/userSlice';
 
 const Login = () => {
   const [login, setInputValue] = useState<string>('');
   const [password, setInputPassword] = useState<string>('');
+  const dispatch = useAppDispatch();
 
+  const canBeSubmitted = () => login.length > 0 && password.length > 0;
+
+  function insertFormInfo(e: React.MouseEvent<HTMLButtonElement>) {
+    if (!canBeSubmitted()) {
+      return;
+    }
+
+    dispatch(addInfo({ login, password }));
+    setInputValue('');
+    setInputPassword('');
+  }
   return (
     <div>
       <Container>
@@ -44,10 +58,13 @@ const Login = () => {
                       </Form.Group>
 
                       <div className='d-grid'>
-                        <Button variant='primary' type='submit'>
-                          {/* onClick={(e) => insertFormInfo(e)}
-                          disabled={!canBeSubmitted()} */}
-                          {/* <Link
+                        <Button
+                          variant='primary'
+                          type='submit'
+                          onClick={(e) => insertFormInfo(e)}
+                          disabled={!canBeSubmitted()}
+                        >
+                          <Link
                             style={{
                               width: '100%',
                               color: 'white',
@@ -56,8 +73,8 @@ const Login = () => {
                             }}
                             to='/profile'
                           >
-                          </Link> */}
-                          Login
+                            Login
+                          </Link>
                         </Button>
                       </div>
                     </Form>
